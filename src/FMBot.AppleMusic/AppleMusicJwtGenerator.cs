@@ -21,6 +21,11 @@ public class AppleMusicJwtAuthProvider
 
     public string CreateAuthorizationHeader()
     {
+        if (string.IsNullOrEmpty(_secret))
+        {
+            return "Bearer DUMMY_TOKEN";
+        }
+
         var timeNow = DateTime.UtcNow;
         var timeExpired = timeNow.AddDays(180);
 
