@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/runtime:10.0-noble-amd64 AS base
 
-RUN apt-get update -y && apt-get install -y libjemalloc2 libgdiplus software-properties-common curl
+RUN apt-get update -y && apt-get install -y libjemalloc2 libgdiplus software-properties-common curl python3
 RUN add-apt-repository ppa:ubuntuhandbook1/ffmpeg8 && apt-get update -y && apt-get install -y ffmpeg
 
 #####################
@@ -56,5 +56,5 @@ ENV PATH="/root/.dotnet/tools:${PATH}"
 ENV DOTNET_GCConserveMemory=5
 ENV DOTNET_GCHighMemPercent=75
 
-ENTRYPOINT ["/bin/sh", "-c", "mkdir -p configs && if [ -f /etc/secrets/config.json ]; then cp /etc/secrets/config.json configs/config.json; elif [ -f config.json ]; then cp config.json configs/config.json; fi && dotnet FMBot.Bot.dll"]
+ENTRYPOINT ["/bin/sh", "-c", "mkdir -p configs && if [ -f /etc/secrets/config.json ]; then cp /etc/secrets/config.json configs/config.json; elif [ -f config.json ]; then cp config.json configs/config.json; fi && python3 -m http.server ${PORT:-10000} & dotnet FMBot.Bot.dll"]
 HEALTHCHECK --interval=20s --timeout=20s --retries=18 --start-period=180s CMD test -n "$(find healthcheck -mmin -1)"
