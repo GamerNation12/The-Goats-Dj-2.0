@@ -56,6 +56,5 @@ ENV PATH="/root/.dotnet/tools:${PATH}"
 ENV DOTNET_GCConserveMemory=5
 ENV DOTNET_GCHighMemPercent=75
 
-ENTRYPOINT ["dotnet", "FMBot.Bot.dll"]
-
+ENTRYPOINT ["/bin/sh", "-c", "mkdir -p configs && if [ -f /etc/secrets/config.json ]; then cp /etc/secrets/config.json configs/config.json; elif [ -f config.json ]; then cp config.json configs/config.json; fi && dotnet FMBot.Bot.dll"]
 HEALTHCHECK --interval=20s --timeout=20s --retries=18 --start-period=180s CMD test -n "$(find healthcheck -mmin -1)"
